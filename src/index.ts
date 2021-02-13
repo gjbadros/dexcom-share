@@ -85,7 +85,7 @@ class AuthorizeError extends Error {
 }
 
 // Login to Dexcom's server.
-async function authorize(
+export async function authorize(
 	opts: createDexcomShareIterator.AuthorizeOptions
 ): Promise<string> {
 	const url = Defaults.login;
@@ -107,8 +107,8 @@ async function authorize(
 		body: JSON.stringify(payload),
 	});
 	const body = await res.json();
-	if (!res.ok) {
-		throw new AuthorizeError(body.Message);
+	if (!res.ok || body === '00000000-0000-0000-0000-000000000000') {
+		throw new AuthorizeError(body.Message ?? 'Invalid username or password');
 	}
 	debug('Session ID: %o', body);
 	return body;
@@ -399,4 +399,4 @@ namespace createDexcomShareIterator {
 	}
 }
 
-export = createDexcomShareIterator;
+export default createDexcomShareIterator;
