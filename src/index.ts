@@ -107,7 +107,7 @@ export async function authorize(
 		body: JSON.stringify(payload),
 	});
 	const body = await res.json();
-	if (!res.ok || body === '00000000-0000-0000-0000-000000000000') {
+	if (!res.ok || body.match(/^[0-]*$/)) {
 		throw new AuthorizeError(body.Message ?? 'Invalid username or password');
 	}
 	debug('Session ID: %o', body);
